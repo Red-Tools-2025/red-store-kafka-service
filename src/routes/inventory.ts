@@ -40,7 +40,9 @@ router.post(
       await producer.disconnect();
       res.status(200).json({ status: `Updates Sent to ${topic}` });
       // Bring in producer to send data
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 );
 
