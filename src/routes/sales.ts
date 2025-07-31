@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { getPartitionFromStoreId } from "../lib/kafka/kafka-actions";
-import { kafka, producer } from "../lib/kafka/kafka-client";
+import { producer } from "../lib/kafka/kafka-client";
 
 const router = Router();
 
