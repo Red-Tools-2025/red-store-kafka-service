@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import { getPartitionFromStoreId } from "../lib/kafka/kafka-actions";
 import { kafka, producer } from "../lib/kafka/kafka-client";
+import { redis } from "../lib/redis/redis-cache-client";
 
 const router = Router();
 
@@ -110,7 +111,20 @@ router.get("/updates-stream", async (req: Request, res: Response) => {
     "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Headers": "Cache-Control",
   });
+
   try {
+    const redis_subscriber = redis.duplicate();
+    await redis_subscriber.connect().then(() => {
+      redis_subscriber.subscribe(channel_name, (message) => {
+        res.write(`data: ${message}\n\n`);
+      });
+    });
+
+    // When closing SSE connection
+    req.on("close", () => {
+      redis_subscriber.unsubscribe(channel_name);
+      redis_subscriber.quit();
+    });
   } catch (err) {
     console.log("Error Setting up SSE stream for updates channel", err);
     res.status(500).json({ message: "Updates channel stream error" });
