@@ -3,14 +3,14 @@ import express, { Response, Request } from "express";
 import { admin, consumer, producer } from "./lib/kafka/kafka-client";
 import { getPartitionFromStoreId } from "./lib/kafka/kafka-actions";
 import inventoryEventsRouter from "./routes/inventory";
-import consumersRouter from "./routes/consumers";
+import salesEventRouter from "./routes/sales";
 
 const PORT = 3000;
 const app = express();
 
 app.use(express.json());
 app.use("/inventory", inventoryEventsRouter);
-app.use("/consumers", consumersRouter);
+app.use("/sales", salesEventRouter);
 
 app.use(
   cors({
@@ -61,11 +61,6 @@ app.post(
     }
   }
 );
-
-interface ConsumeTestReqBody {
-  topic: string;
-  storeId: number;
-}
 
 // for consuming messages and consumer groups
 app.get("/consume", async (req: Request, res: Response) => {
