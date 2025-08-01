@@ -7,11 +7,15 @@ const router = Router();
 interface SalesProducerRequest {
   store_id: number;
   user_id: string;
-  purchase_time: string;
-  purchases: {
-    product_id: number;
-    productQuantity: number;
-    product_price: number;
+  sales_records: {
+    purchases: {
+      product_id: number;
+      product_current_stock: number;
+      product_name: string;
+      product_price: number;
+      productQuantity: number;
+    }[];
+    purchase_time: string;
   }[];
 }
 
@@ -19,7 +23,7 @@ router.post(
   "/produce-event",
   async (req: Request<{}, {}, SalesProducerRequest>, res: Response) => {
     try {
-      const { purchase_time, purchases, store_id, user_id } = req.body;
+      const { sales_records, store_id, user_id } = req.body;
       const topic = `sales-event_${user_id}`;
 
       // generate partition number to send data to
@@ -31,8 +35,7 @@ router.post(
           {
             value: JSON.stringify({
               store_id,
-              purchase_time,
-              purchases,
+              sales_records,
             }),
             partition: parition_alloc,
           },
