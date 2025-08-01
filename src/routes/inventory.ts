@@ -97,4 +97,24 @@ router.get("/consumer-event", async (req: Request, res: Response) => {
   }
 });
 
+// Endpoint for listening to valid channel name for redis messages
+router.get("/updates-stream", async (req: Request, res: Response) => {
+  const { user_id, store_id } = req.query;
+  const channel_name = `updates_channel_inventory:${user_id}:${store_id}`;
+
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+    "Access-Control-Allow-Origin": "http://localhost:3001",
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Headers": "Cache-Control",
+  });
+  try {
+  } catch (err) {
+    console.log("Error Setting up SSE stream for updates channel", err);
+    res.status(500).json({ message: "Updates channel stream error" });
+  }
+});
+
 export default router;
