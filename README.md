@@ -1,10 +1,2 @@
-# Red Store Producer Service
-
-Main entry point handling HTTP requests and Kafka topic management.
-
-## Key Features
-
-- **Dynamic topic creation and validation**
-- **Partition-based message routing**
-- **CORS configuration** for multi-device support
-- **Health monitoring and error handling**
+# Red Kafka Service
+Main entry point handling HTTP requests and Kafka topic management, along with APIs for consuming & producing events 
